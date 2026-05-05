@@ -1,38 +1,139 @@
-.App {
+/* Full background */
+.login_container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Login card */
+.login_box {
+  background: rgb(255 255 255 / 41%);
+  padding: 30px;
+  border-radius: 12px;
+  width: 320px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.login_box h2 {
   text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Input group */
+.input_group {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  margin-bottom: 15px;
+}
+
+/* Labels */
+.input_group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+/* Inputs */
+.input_group input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input_group input:focus {
+  border-color: #007bff;
+}
+
+/* Error text */
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Button */
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
   color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
-.App-link {
-  color: #61dafb;
+.login-btn:hover {
+  background-color: #0056b3;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.logoutIcon_btn{
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  height: 35px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+.logout_btn{
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  height: 50px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+.Textfield_content .MuiOutlinedInput-input{
+  padding: 7.5px 14px !important;
+  border-radius: 10px !important;
+}
+.table_content.MuiTableContainer-root{
+  height: 400px !important;
+}
+.table_content .MuiTableCell-root {
+  text-align: center !important;
+}
+.table_content .MuiTableCell-head{
+  font-weight: bold !important;
+}
+.table_content .MuiTableHead-root {
+  background-color: #f0f0f0 !important;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  text-align: center !important;
+}
+.table_content .MuiButton-root {
+  min-width: 32px !important;
+  padding: 0px !important;
+}
+.logout_btn{
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  height: 30px;
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: center;
+  margin-left: 10px;
+  padding: auto;
+}
+.logout_btn:hover {
+  background-color: #c82333;
 }
