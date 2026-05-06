@@ -12,7 +12,11 @@ import {
   Typography,
   Switch,
   InputAdornment,
-  IconButton
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+  CircularProgress,
+  Card
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
@@ -31,13 +35,14 @@ import ClearIcon from "@mui/icons-material/Clear";
 import Header from "./Header";
 import EmployeeProfile from "./EmployeeProfileList";
 import EmployeeCard from "./EmployeeCard";
+import BarChat from "./BarChat";
 const Dashboard = () => {
   const dispatch = useDispatch();
-  
+
   const [showPopup, setShowPopup] = useState(false);
   const navigation = useNavigate();
   const handleLogout = () => {
-    navigation("/login");
+    navigation("/");
     setShowPopup(true);
   };
 
@@ -76,7 +81,7 @@ const Dashboard = () => {
   const recentActivities = employees.slice(0, 5).map(emp => ({
     message: `${emp.name} loaded`,
   }));
-
+  console.log("departmentStats:", departmentStats);
 
   const filtered = employees.filter(
     (emp) =>
@@ -125,7 +130,7 @@ const Dashboard = () => {
   const [deptFilter, setDeptFilter] = useState("");
   const departments = [...new Set(employees.map(emp => emp.department))];
   const [selectedDepts, setSelectedDepts] = useState([]);
-  const cardHeaders = [{ id: "1", header: "Total Employees", color: "red", background: "linear-gradient(90deg, #ff416c, #ff4b2b)" }, { id: "2", header: "Active", color: "green", background: "linear-gradient(90deg, #00b09b, #96c93d)" }, { id: "3", header: "Inactive", color: "red", background: "linear-gradient(90deg, #ff416c, #ff4b2b)" }, { id: "4", header: "Departments", color: "blue", background: "linear-gradient(90deg, #2193b0, #6dd5ed)" }, { id: "5", header: "Recent Activities", color: "purple", background: "linear-gradient(90deg, #834d9b, #d04a8e)" }];
+  const cardHeaders = [{ id: "1", header: "Total Employees", color: "red", background: "linear-gradient(90deg, #ff416c, #ff4b2b)" }, { id: "2", header: "Active", color: "green", background: "linear-gradient(90deg, #00b09b, #96c93d)" }, { id: "3", header: "Inactive", color: "red", background: "linear-gradient(90deg, #ff416c, #ff4b2b)" }];
 
   // loader
   const [visibleCount, setVisibleCount] = useState(10);
@@ -177,11 +182,44 @@ const Dashboard = () => {
 
     return () => observer.disconnect();
   }, [filteredEmployees, visibleCount]);
+
+
   return (
     <div >
-     <Header showPopup={showPopup} setShowPopup={setShowPopup} handleLogout={handleLogout}  />
-      <EmployeeCard totalEmployees={totalEmployees} activeCount={activeCount} inactiveCount={inactiveCount} departmentStats={departmentStats} cardHeaders={cardHeaders} />    
+      <Header showPopup={showPopup} setShowPopup={setShowPopup} handleLogout={handleLogout} />
+      {/* employee card */}
+      <EmployeeCard totalEmployees={totalEmployees} activeCount={activeCount} inactiveCount={inactiveCount} cardHeaders={cardHeaders} />
+      {/* bar chart */}
+      <Grid container p={2} spacing={2} >
+        <Grid item xs={12} md={6}  >
+          <Card
+            sx={{
+              border: "1px solid #e0e0e0",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+              borderRadius: "12px",
+              padding: "10px"
+            }}
+          >
+            <Typography sx={{ fontWeight: 600, fontSize: "16px" }}>Departments</Typography>
+            <BarChat dataSource={departmentStats} type="department" />
+          </Card>
+        </Grid>
 
+        <Grid item xs={12} md={6}>
+          <Card
+            sx={{
+              border: "1px solid #e0e0e0",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+              borderRadius: "12px",
+              padding: "10px"
+            }}  >
+
+            <Typography sx={{ fontWeight: 600, fontSize: "16px" }}>Recent Activities</Typography>
+            <BarChat dataSource={recentActivities} type="activity" />
+          </Card>
+        </Grid>
+      </Grid>
+      {/* search and add employee controls */}
       <Grid sx={{
         marginTop: "20px",
         marginLeft: "20px",
@@ -210,7 +248,7 @@ const Dashboard = () => {
           Add Employee
         </Button>
       </Grid>
-
+      {/* table */}
       {loading && <p>Loading...</p>}
 
       <TableContainer component={Paper} className="table_content">
@@ -225,65 +263,73 @@ const Dashboard = () => {
             </TableRow>
           </TableHead>
 
-          <TableBody >
-            {visibleEmployees.length === 0 ? (
+          {!loading ? (
+            <TableBody >
+              {visibleEmployees.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5}>No data found</TableCell>
+                </TableRow>
+              ) : visibleEmployees.map((emp) => (
+                <TableRow key={emp.id}>
+                  <TableCell>{emp.name}</TableCell>
+                  <TableCell>{emp.email}</TableCell>
+                  <TableCell>{emp.department}</TableCell>
+
+                  <TableCell>
+                    <span style={{ marginRight: "8px" }}>
+                      {emp.active ? "Active" : "Inactive"}
+                    </span>
+
+                    <Switch
+                      checked={emp.active}
+                      onChange={(e) =>
+                        dispatch(setStatus({ id: emp.id, status: e.target.checked }))
+                      }
+                      color="success"
+                    />
+                  </TableCell>
+
+                  <TableCell>
+                    <Button
+                      className="btn_content"
+                      onClick={() => handleView(emp)}
+                      title="View"
+                    >
+                      <VisibilityIcon />
+                    </Button>
+                    <Button
+                      className="btn_content"
+                      title="edit"
+                      onClick={() => {
+                        setForm(emp);
+                        setEditId(emp.id);
+                        setOpen(true);
+                        setIsViewMode(false);
+                      }}
+                    >
+                      <EditIcon />
+                    </Button>
+
+                    <Button
+                      title="Delete"
+                      className="btn_content"
+                      color="error"
+                      onClick={() => dispatch(deleteEmployee(emp.id))}
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+
+              ))}
+            </TableBody>
+          ) : (
+            <TableBody>
               <TableRow>
-                <TableCell colSpan={5}>No data found</TableCell>
+                <TableCell colSpan={5}><CircularProgress /></TableCell>
               </TableRow>
-            ) : visibleEmployees.map((emp) => (
-              <TableRow key={emp.id}>
-                <TableCell>{emp.name}</TableCell>
-                <TableCell>{emp.email}</TableCell>
-                <TableCell>{emp.department}</TableCell>
-
-                <TableCell>
-                  <span style={{ marginRight: "8px" }}>
-                    {emp.active ? "Active" : "Inactive"}
-                  </span>
-
-                  <Switch
-                    checked={emp.active}
-                    onChange={(e) =>
-                      dispatch(setStatus({ id: emp.id, status: e.target.checked }))
-                    }
-                    color="success"
-                  />
-                </TableCell>
-
-                <TableCell>
-                  <Button
-                    className="btn_content"
-                    onClick={() => handleView(emp)}
-                    title="View"
-                  >
-                    <VisibilityIcon />
-                  </Button>
-                  <Button
-                    className="btn_content"
-                    title="edit"
-                    onClick={() => {
-                      setForm(emp);
-                      setEditId(emp.id);
-                      setOpen(true);
-                      setIsViewMode(false);
-                    }}
-                  >
-                    <EditIcon />
-                  </Button>
-
-                  <Button
-                    title="Delete"
-                    className="btn_content"
-                    color="error"
-                    onClick={() => dispatch(deleteEmployee(emp.id))}
-                  >
-                    <DeleteIcon />
-                  </Button>
-                </TableCell>
-              </TableRow>
-
-            ))}
-          </TableBody>
+            </TableBody>
+          )}
 
         </Table>
       </TableContainer>

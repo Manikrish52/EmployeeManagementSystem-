@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material"
 
-const EmployeeCard = ({ totalEmployees, activeCount, inactiveCount, departmentStats, cardHeaders }) => {
+const EmployeeCard = ({ totalEmployees, activeCount, inactiveCount, cardHeaders }) => {
     return(
         
               <Grid container sx={{ marginTop: "10px", }}  >
@@ -29,18 +29,15 @@ const EmployeeCard = ({ totalEmployees, activeCount, inactiveCount, departmentSt
                         scrollbarWidth: "thin",
                         scrollbarColor: "rgba(0,0,0,0.4) transparent",
                       }} >
-                        <Typography sx={{ color: "#fff", fontSize: "20px", fontWeight: "bold" }}>{item.header}</Typography>
+                        <Typography sx={{ color: "#fff", fontSize: "20px", fontWeight: "bold" }}>{item?.header}</Typography>
                         {item.header === "Total Employees" ? (
                           <Typography sx={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}>{totalEmployees}</Typography>
                         ) : item.header === "Active" ? (
                           <Typography sx={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}>{activeCount}</Typography>
                         ) : item.header === "Inactive" ? (
                           <Typography sx={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}>{inactiveCount}</Typography>
-                        ) : (
-                          Object.entries(departmentStats).map(([dept, count]) => (
-                            <Typography sx={{ fontSize: "13px", color: "#fff",fontWeight: "500" }} key={dept}>{dept}: <span>{count}</span></Typography>
-                          ))
-                        )}
+                        ) : null}
+                        
                       </Grid>
                     </Grid>
                   </Grid>

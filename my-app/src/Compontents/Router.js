@@ -8,7 +8,7 @@ import EmployeeProfile from "./EmployeeProfileList";
 const Router = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
 
       <Route
         path="/Dashboard"
