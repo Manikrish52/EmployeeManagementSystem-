@@ -314,7 +314,12 @@ const Dashboard = () => {
                       title="Delete"
                       className="btn_content"
                       color="error"
-                      onClick={() => dispatch(deleteEmployee(emp.id))}
+                      onClick={() => {
+                        const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+                        if (confirmDelete) {
+                          dispatch(deleteEmployee(emp.id));
+                        }
+                      }}
                     >
                       <DeleteIcon />
                     </Button>
@@ -343,6 +348,7 @@ const Dashboard = () => {
       >
         {loadingMore && <p>Loading more employees...</p>}
       </div>
+
       <EditPopup open={open} onClose={() => setOpen(false)} editId={editId} form={form} setForm={setForm} handleSave={handleSave} isViewMode={isViewMode} />
     </div>
   );
