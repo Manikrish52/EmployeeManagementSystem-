@@ -1,5 +1,4 @@
 import './App.css';
-import Dashboard from './Compontents/Dashboard';
 import Router from './Compontents/Router';
 
 function App() {
